@@ -7,20 +7,29 @@
 <meta name="description" content="APEX scans any company's financials and gives you an AI-powered health report in 30 seconds. No setup, no spreadsheets, no analyst required." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0a0a0f;
-    --bg-alt: #0e0e16;
-    --surface: #14141f;
-    --surface-2: #191926;
-    --border: #232331;
-    --purple: #6d5dfc;
-    --purple-light: #9b8dff;
-    --purple-dim: rgba(109, 93, 252, 0.15);
-    --text: #f5f5fa;
-    --text-dim: #a3a3b8;
-    --text-dimmer: #6f6f85;
+    --bg: #ffffff;
+    --bg-alt: #f7f7f5;
+    --surface: #ffffff;
+    --surface-2: #ffffff;
+    --border: #e4e4e4;
+    --turquoise: #40e0d0;
+    --turquoise-wash: rgba(64, 224, 208, 0.14);
+    --turquoise-ink: #15837a; /* text-safe darker variant — the vivid turquoise fails contrast as text-on-white (1.6:1), only usable as a fill with black text on top */
+    --orange: #ff7900;
+    --orange-wash: rgba(255, 121, 0, 0.12);
+    --orange-ink: #b35700; /* text-safe darker variant — the vivid orange fails contrast as text-on-white (2.6:1), only usable as a fill with black text on top */
+    --red: #e8362e;
+    --text: #0b0b0c;
+    --text-dim: #55575a;
+    --text-dimmer: #86888b;
+    --radius: 6px;
+    --radius-sm: 3px;
+    --mono: 'IBM Plex Mono', ui-monospace, monospace;
+    --sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --display: 'Fraunces', Georgia, serif;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -30,12 +39,21 @@
   body {
     background: var(--bg);
     color: var(--text);
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: var(--sans);
     line-height: 1.6;
     overflow-x: hidden;
   }
 
   a { color: inherit; text-decoration: none; }
+
+  :focus-visible {
+    outline: 2px solid var(--text);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  }
 
   .container {
     max-width: 1180px;
@@ -43,38 +61,13 @@
     padding: 0 24px;
   }
 
-  /* Background glow effects */
-  .glow {
-    position: fixed;
-    border-radius: 50%;
-    filter: blur(120px);
-    pointer-events: none;
-    z-index: 0;
-  }
-  .glow-1 {
-    width: 600px;
-    height: 600px;
-    background: rgba(109, 93, 252, 0.18);
-    top: -200px;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-  .glow-2 {
-    width: 500px;
-    height: 500px;
-    background: rgba(109, 93, 252, 0.1);
-    bottom: 10%;
-    right: -150px;
-  }
-
   /* Header */
   header {
     position: sticky;
     top: 0;
     z-index: 100;
-    backdrop-filter: blur(12px);
-    background: rgba(10, 10, 15, 0.75);
-    border-bottom: 1px solid var(--border);
+    background: var(--text);
+    border-bottom: 1px solid var(--text);
   }
 
   nav {
@@ -90,22 +83,25 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    font-weight: 800;
-    font-size: 20px;
-    letter-spacing: -0.02em;
+    font-family: var(--mono);
+    font-weight: 500;
+    font-size: 17px;
+    letter-spacing: 0.02em;
+    color: #fff;
   }
 
   .logo-mark {
     width: 30px;
     height: 30px;
-    border-radius: 8px;
-    background: linear-gradient(135deg, var(--purple), #4a3fd6);
+    border-radius: var(--radius-sm);
+    background: var(--orange);
+    color: var(--text);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: 900;
-    font-size: 15px;
-    box-shadow: 0 0 24px rgba(109, 93, 252, 0.5);
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 14px;
   }
 
   .nav-links {
@@ -117,11 +113,11 @@
   .nav-links a {
     font-size: 14px;
     font-weight: 500;
-    color: var(--text-dim);
+    color: rgba(255,255,255,0.7);
     transition: color 0.2s ease;
   }
 
-  .nav-links a:hover { color: var(--text); }
+  .nav-links a:hover { color: #fff; }
 
   .btn {
     display: inline-flex;
@@ -130,34 +126,30 @@
     gap: 8px;
     font-weight: 600;
     font-size: 14px;
-    border-radius: 10px;
+    font-family: var(--sans);
+    border-radius: var(--radius-sm);
     padding: 12px 22px;
     cursor: pointer;
-    border: none;
-    transition: all 0.2s ease;
+    border: 1.5px solid transparent;
+    transition: transform 0.15s ease;
     white-space: nowrap;
   }
 
   .btn-primary {
-    background: linear-gradient(135deg, var(--purple), #5a4ae0);
-    color: #fff;
-    box-shadow: 0 4px 20px rgba(109, 93, 252, 0.35);
+    background: var(--orange);
+    color: var(--text);
   }
 
-  .btn-primary:hover {
-    box-shadow: 0 6px 28px rgba(109, 93, 252, 0.55);
-    transform: translateY(-1px);
-  }
+  .btn-primary:hover { transform: translateY(-1px); }
 
   .btn-ghost {
     background: transparent;
     color: var(--text);
-    border: 1px solid var(--border);
+    border: 1.5px solid var(--border);
   }
 
   .btn-ghost:hover {
-    border-color: var(--purple);
-    background: var(--purple-dim);
+    border-color: var(--text);
   }
 
   .btn-small { padding: 9px 16px; font-size: 13px; }
@@ -176,37 +168,34 @@
     gap: 8px;
     padding: 6px 14px;
     border-radius: 999px;
-    background: var(--purple-dim);
-    border: 1px solid rgba(109, 93, 252, 0.3);
-    color: var(--purple-light);
+    background: var(--turquoise-wash);
+    border: 1px solid rgba(64, 224, 208, 0.4);
+    color: var(--text);
     font-size: 13px;
     font-weight: 600;
     margin-bottom: 28px;
+    font-family: var(--mono);
   }
 
   .badge .dot {
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: var(--purple-light);
-    box-shadow: 0 0 8px var(--purple-light);
+    background: var(--orange);
   }
 
   .hero h1 {
-    font-size: clamp(38px, 6vw, 72px);
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    line-height: 1.08;
+    font-family: var(--display);
+    font-size: clamp(36px, 6vw, 68px);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.1;
     max-width: 900px;
     margin: 0 auto 24px;
+    text-wrap: balance;
   }
 
-  .hero h1 .accent {
-    background: linear-gradient(135deg, var(--purple-light), var(--purple));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
+  .hero h1 .accent { color: var(--turquoise-ink); }
 
   .hero p {
     font-size: 19px;
@@ -226,19 +215,20 @@
   .hero-note {
     font-size: 13px;
     color: var(--text-dimmer);
+    font-family: var(--mono);
   }
 
-  .btn-lg { padding: 15px 30px; font-size: 15.5px; border-radius: 12px; }
+  .btn-lg { padding: 15px 30px; font-size: 15.5px; border-radius: var(--radius-sm); }
 
   /* Hero visual */
   .hero-visual {
     max-width: 900px;
     margin: 72px auto 0;
-    border-radius: 20px;
+    border-radius: var(--radius);
     border: 1px solid var(--border);
-    background: linear-gradient(180deg, var(--surface), var(--bg-alt));
+    background: #fff;
     padding: 28px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.02) inset;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.08);
   }
 
   .visual-header {
@@ -258,16 +248,20 @@
   .score-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
+    gap: 2px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
   }
 
   .score-card {
-    background: var(--surface-2);
-    border: 1px solid var(--border);
-    border-radius: 14px;
+    background: #fff;
     padding: 18px;
     text-align: left;
   }
+  .score-card.tint-turquoise { background: var(--turquoise-wash); }
+  .score-card.tint-orange { background: var(--orange-wash); }
 
   .score-card .label {
     font-size: 12px;
@@ -275,17 +269,18 @@
     text-transform: uppercase;
     letter-spacing: 0.06em;
     margin-bottom: 10px;
+    font-family: var(--mono);
   }
 
   .score-card .value {
-    font-size: 26px;
-    font-weight: 800;
+    font-family: var(--mono);
+    font-size: 24px;
+    font-weight: 500;
     margin-bottom: 6px;
   }
 
-  .score-card .value.good { color: #5fe3a1; }
-  .score-card .value.warn { color: #ffc857; }
-  .score-card .value.purple { color: var(--purple-light); }
+  .score-card .value.turquoise { color: var(--turquoise-ink); }
+  .score-card .value.orange { color: var(--orange-ink); }
 
   .bar {
     height: 6px;
@@ -309,19 +304,22 @@
   }
 
   .eyebrow {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--purple-light);
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-dim);
     text-transform: uppercase;
     letter-spacing: 0.1em;
     margin-bottom: 14px;
   }
 
   .section-head h2 {
-    font-size: clamp(28px, 4vw, 40px);
-    font-weight: 800;
-    letter-spacing: -0.02em;
+    font-family: var(--display);
+    font-size: clamp(26px, 4vw, 38px);
+    font-weight: 600;
+    letter-spacing: -0.01em;
     margin-bottom: 16px;
+    text-wrap: balance;
   }
 
   .section-head p {
@@ -329,48 +327,45 @@
     font-size: 17px;
   }
 
-  /* How it works */
+  /* How it works — a real sequence, so numbering stays; badges alternate the two brand hues */
   .steps {
     max-width: 1000px;
     margin: 0 auto;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 24px;
-    position: relative;
+    gap: 2px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
   }
 
   .step {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
+    background: #fff;
     padding: 28px 22px;
     position: relative;
-    transition: border-color 0.25s ease, transform 0.25s ease;
-  }
-
-  .step:hover {
-    border-color: rgba(109, 93, 252, 0.4);
-    transform: translateY(-4px);
   }
 
   .step-num {
-    width: 38px;
-    height: 38px;
-    border-radius: 10px;
-    background: var(--purple-dim);
-    border: 1px solid rgba(109, 93, 252, 0.35);
-    color: var(--purple-light);
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-sm);
+    color: var(--text);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: 800;
-    font-size: 15px;
+    font-family: var(--mono);
+    font-weight: 600;
+    font-size: 14px;
     margin-bottom: 20px;
   }
 
+  .step:nth-child(odd) .step-num { background: var(--turquoise); }
+  .step:nth-child(even) .step-num { background: var(--orange); }
+
   .step h3 {
     font-size: 17px;
-    font-weight: 700;
+    font-weight: 600;
     margin-bottom: 10px;
   }
 
@@ -389,34 +384,39 @@
   .trust-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 28px;
+    gap: 2px;
     max-width: 1000px;
     margin: 0 auto;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
   }
 
   .trust-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
+    background: #fff;
     padding: 32px;
   }
 
   .trust-icon {
     width: 44px;
     height: 44px;
-    border-radius: 12px;
-    background: var(--purple-dim);
+    border-radius: var(--radius-sm);
     display: flex;
     align-items: center;
     justify-content: center;
     margin-bottom: 20px;
   }
 
-  .trust-icon svg { width: 22px; height: 22px; stroke: var(--purple-light); }
+  .trust-card:nth-child(1) .trust-icon { background: var(--turquoise); }
+  .trust-card:nth-child(2) .trust-icon { background: var(--orange); }
+  .trust-card:nth-child(3) .trust-icon { background: var(--turquoise-wash); }
+
+  .trust-icon svg { width: 22px; height: 22px; stroke: var(--text); }
 
   .trust-card h3 {
     font-size: 18px;
-    font-weight: 700;
+    font-weight: 600;
     margin-bottom: 10px;
   }
 
@@ -457,16 +457,16 @@
     width: 22px;
     height: 22px;
     border-radius: 50%;
-    border: 1px solid var(--border);
+    border: 1.5px solid var(--text);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 16px;
-    color: var(--purple-light);
+    color: var(--text);
     transition: transform 0.25s ease;
   }
 
-  .faq-item.open .faq-question .icon { transform: rotate(45deg); border-color: var(--purple); }
+  .faq-item.open .faq-question .icon { transform: rotate(45deg); background: var(--orange); border-color: var(--orange); }
 
   .faq-answer {
     max-height: 0;
@@ -492,44 +492,30 @@
   .final-cta-box {
     max-width: 760px;
     margin: 0 auto;
-    background: linear-gradient(180deg, var(--surface), var(--bg-alt));
-    border: 1px solid var(--border);
-    border-radius: 24px;
+    background: var(--turquoise-wash);
+    border: 1px solid rgba(64, 224, 208, 0.4);
+    border-radius: var(--radius);
     padding: 64px 40px;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .final-cta-box::before {
-    content: "";
-    position: absolute;
-    width: 400px;
-    height: 400px;
-    background: rgba(109, 93, 252, 0.2);
-    filter: blur(100px);
-    top: -150px;
-    left: 50%;
-    transform: translateX(-50%);
   }
 
   .final-cta-box h2 {
+    font-family: var(--display);
     font-size: clamp(26px, 4vw, 36px);
-    font-weight: 800;
-    letter-spacing: -0.02em;
+    font-weight: 600;
+    letter-spacing: -0.01em;
     margin-bottom: 16px;
-    position: relative;
+    text-wrap: balance;
   }
 
   .final-cta-box p {
     color: var(--text-dim);
     font-size: 16px;
     margin-bottom: 36px;
-    position: relative;
   }
 
-  /* Footer */
+  /* Footer — bookends the page with the same dark chrome as the nav */
   footer {
-    border-top: 1px solid var(--border);
+    background: var(--text);
     padding: 40px 24px;
   }
 
@@ -543,11 +529,12 @@
     gap: 16px;
   }
 
-  .footer-inner .logo { font-size: 16px; }
+  .footer-inner .logo { font-size: 15px; }
 
   footer .copy {
     font-size: 13px;
-    color: var(--text-dimmer);
+    color: rgba(255,255,255,0.5);
+    font-family: var(--mono);
   }
 
   footer .footer-links {
@@ -557,11 +544,11 @@
 
   footer .footer-links a {
     font-size: 13px;
-    color: var(--text-dimmer);
+    color: rgba(255,255,255,0.65);
     transition: color 0.2s ease;
   }
 
-  footer .footer-links a:hover { color: var(--text-dim); }
+  footer .footer-links a:hover { color: #fff; }
 
   /* Responsive */
   @media (max-width: 900px) {
@@ -580,9 +567,6 @@
 </style>
 </head>
 <body>
-
-<div class="glow glow-1"></div>
-<div class="glow glow-2"></div>
 
 <header>
   <nav>
@@ -617,25 +601,25 @@
           <span></span><span></span><span></span>
         </div>
         <div class="score-grid">
-          <div class="score-card">
+          <div class="score-card tint-turquoise">
             <div class="label">Overall Health</div>
-            <div class="value purple">82/100</div>
-            <div class="bar"><div class="bar-fill" style="width:82%; background:var(--purple-light);"></div></div>
+            <div class="value turquoise">82/100</div>
+            <div class="bar"><div class="bar-fill" style="width:82%; background:var(--turquoise);"></div></div>
           </div>
           <div class="score-card">
             <div class="label">Cash Runway</div>
-            <div class="value good">14 mo</div>
-            <div class="bar"><div class="bar-fill" style="width:70%; background:#5fe3a1;"></div></div>
+            <div class="value turquoise">14 mo</div>
+            <div class="bar"><div class="bar-fill" style="width:70%; background:var(--turquoise);"></div></div>
           </div>
-          <div class="score-card">
+          <div class="score-card tint-orange">
             <div class="label">Burn Efficiency</div>
-            <div class="value warn">Fair</div>
-            <div class="bar"><div class="bar-fill" style="width:54%; background:#ffc857;"></div></div>
+            <div class="value orange">Fair</div>
+            <div class="bar"><div class="bar-fill" style="width:54%; background:var(--orange);"></div></div>
           </div>
           <div class="score-card">
             <div class="label">Risk Flags</div>
-            <div class="value good">3 Found</div>
-            <div class="bar"><div class="bar-fill" style="width:30%; background:#5fe3a1;"></div></div>
+            <div class="value turquoise">3 Found</div>
+            <div class="bar"><div class="bar-fill" style="width:30%; background:var(--turquoise);"></div></div>
           </div>
         </div>
       </div>
