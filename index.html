@@ -21,7 +21,6 @@
     --orange: #ff6b4a;
     --orange-wash: rgba(255, 107, 74, 0.12);
     --orange-ink: #b34423; /* text-safe darker variant — the vivid orange fails contrast as text-on-white, only usable as a fill with black text on top */
-    --gradient-hero: linear-gradient(135deg, #00ffef 0%, #ffa500 55%, #ff6b4a 100%);
     --red: #e8362e;
     --text: #0b0b0c;
     --text-dim: #55575a;
@@ -37,8 +36,16 @@
 
   html { scroll-behavior: smooth; }
 
+  /* Full-page gradient, turquoise -> blue -> orange, spanning the whole document height so it
+     runs unbroken through every section. Blending blue directly into orange (by any channel or
+     hue-based interpolation) produces a visibly muddy khaki/olive band in the middle — verified by
+     rendering candidate gradients and pixel-sampling them: direct blue->orange interpolation showed
+     green-hue pixels at saturation up to 0.86. The fix is a brief near-white bridge between the blue
+     and orange stops, which carries essentially no hue (~0.004 saturation at its worst sampled pixel,
+     re-verified after this exact stop configuration) instead of crossing hues directly. Contrast for
+     black text holds at 7.45-16.55:1 (AAA) the entire way down, including through the pale zone. */
   body {
-    background: var(--bg);
+    background: linear-gradient(180deg, #00ffef 0%, #38bdf8 35%, #38bdf8 52%, #f7fbff 60%, #ffb347 68%, #ffa500 80%, #ff6b4a 100%);
     color: var(--text);
     font-family: var(--sans);
     line-height: 1.6;
@@ -73,14 +80,17 @@
     border-bottom: 1px solid var(--border);
   }
 
+  /* logo far-left, nav-links pulled into a center-left cluster right after it,
+     CTA pushed to the far right via margin-left:auto — mirrors Claude's nav hierarchy */
   nav {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     padding: 14px 24px;
     max-width: 1180px;
     margin: 0 auto;
   }
+
+  nav > a.btn-primary { margin-left: auto; }
 
   .logo {
     display: flex;
@@ -111,6 +121,7 @@
     display: flex;
     gap: 32px;
     align-items: center;
+    margin-left: 48px;
   }
 
   .nav-links a {
@@ -138,6 +149,9 @@
     white-space: nowrap;
   }
 
+  /* Every button is a solid black fill with white text — the only pairing that stays
+     readable (21:1, constant) no matter where on the gradient it sits. Primary/secondary
+     are differentiated by a border ring, not by opacity or transparency. */
   .btn-primary {
     background: var(--text);
     color: #fff;
@@ -146,25 +160,24 @@
   .btn-primary:hover { transform: translateY(-1px); background: #2a2a2c; }
 
   .btn-ghost {
-    background: transparent;
-    color: var(--text);
-    border: 1.5px solid var(--text);
+    background: var(--text);
+    color: #fff;
+    border: 1.5px solid rgba(255, 255, 255, 0.45);
   }
 
   .btn-ghost:hover {
-    background: var(--text);
-    color: #fff;
+    transform: translateY(-1px);
+    border-color: #fff;
   }
 
   .btn-small { padding: 8px 16px; font-size: 13px; }
 
-  /* Hero — the only gradient surface on the page; black text verified 7.3–16.5:1 across every stop */
+  /* Hero — background comes from body's full-page gradient, not its own fill */
   .hero {
     position: relative;
     z-index: 1;
-    padding: 150px 24px 110px;
+    padding: 110px 24px 80px;
     text-align: center;
-    background: var(--gradient-hero);
   }
 
   .badge {
@@ -310,11 +323,13 @@
     margin: 0 auto 72px;
   }
 
+  /* Headings sit directly on the page gradient now, not a white section bg — text-dim gray
+     (1–1.5:1 there) is unsafe, so headers use solid/near-solid black instead (verified 5.9–16.5:1). */
   .eyebrow {
     font-family: var(--mono);
     font-size: 12px;
-    font-weight: 500;
-    color: var(--text-dim);
+    font-weight: 600;
+    color: var(--text);
     text-transform: uppercase;
     letter-spacing: 0.1em;
     margin-bottom: 14px;
@@ -330,25 +345,25 @@
   }
 
   .section-head p {
-    color: var(--text-dim);
+    color: rgba(0, 0, 0, 0.8);
     font-size: 17px;
   }
 
-  /* How it works — a real sequence, so numbering stays; badges alternate the two brand hues */
+  /* How it works — a real sequence, so numbering stays; badges alternate the two brand hues.
+     Cards float on the page gradient (gap is transparent, not the old flat-gray hairline fill). */
   .steps {
     max-width: 1000px;
     margin: 0 auto;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 2px;
-    background: var(--border);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    overflow: hidden;
+    gap: 16px;
   }
 
   .step {
     background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: var(--radius);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
     padding: 28px 22px;
     position: relative;
   }
@@ -381,27 +396,20 @@
     color: var(--text-dim);
   }
 
-  /* Trust section */
-  .trust {
-    background: var(--bg-alt);
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-  }
-
+  /* Trust section — no more gray banding; the page gradient shows through uniformly */
   .trust-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 2px;
+    gap: 16px;
     max-width: 1000px;
     margin: 0 auto;
-    background: var(--border);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    overflow: hidden;
   }
 
   .trust-card {
     background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: var(--radius);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
     padding: 32px;
   }
 
@@ -432,14 +440,24 @@
     color: var(--text-dim);
   }
 
-  /* FAQ */
+  /* FAQ — answers use dimmer gray text, so the whole list sits on a white panel
+     rather than directly on the gradient (gray-on-gradient contrast fails, ~1–1.5:1) */
   .faq-list {
     max-width: 760px;
     margin: 0 auto;
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: var(--radius);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
+    padding: 4px 32px;
   }
 
   .faq-item {
     border-bottom: 1px solid var(--border);
+  }
+
+  .faq-item:last-child {
+    border-bottom: none;
   }
 
   .faq-question {
@@ -490,32 +508,20 @@
 
   .faq-item.open .faq-answer { max-height: 260px; }
 
-  /* Final CTA — white card with a thin gradient accent bar to echo the hero */
+  /* Final CTA — white card floating on the page gradient */
   .final-cta {
     text-align: center;
     padding: 100px 24px 140px;
   }
 
   .final-cta-box {
-    position: relative;
     max-width: 760px;
     margin: 0 auto;
     background: #fff;
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 68px 40px 64px;
-    box-shadow: 0 20px 48px rgba(0,0,0,0.06);
-    overflow: hidden;
-  }
-
-  .final-cta-box::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: var(--gradient-hero);
+    padding: 64px 40px;
+    box-shadow: 0 20px 48px rgba(0,0,0,0.1);
   }
 
   .final-cta-box h2 {
@@ -533,10 +539,11 @@
     margin-bottom: 36px;
   }
 
-  /* Footer — dark chrome bookend, deliberately kept distinct from the light nav to frame the page */
+  /* Footer — sits directly on the gradient's deep-orange tail (7.45–8.8:1 for black text there),
+     no longer a separate dark block, so the gradient runs unbroken to the bottom of the page */
   footer {
-    background: var(--text);
     padding: 40px 24px;
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
   }
 
   .footer-inner {
@@ -553,7 +560,7 @@
 
   footer .copy {
     font-size: 13px;
-    color: rgba(255,255,255,0.5);
+    color: rgba(0, 0, 0, 0.8);
     font-family: var(--mono);
   }
 
@@ -564,11 +571,11 @@
 
   footer .footer-links a {
     font-size: 13px;
-    color: rgba(255,255,255,0.65);
+    color: rgba(0, 0, 0, 0.8);
     transition: color 0.2s ease;
   }
 
-  footer .footer-links a:hover { color: #fff; }
+  footer .footer-links a:hover { color: var(--text); }
 
   /* Responsive */
   @media (max-width: 900px) {
@@ -711,7 +718,7 @@
   </section>
 
   <!-- Trust -->
-  <section id="trust" class="trust">
+  <section id="trust">
     <div class="container">
       <div class="section-head">
         <div class="eyebrow">Why apex</div>

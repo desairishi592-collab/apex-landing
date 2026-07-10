@@ -15,12 +15,12 @@
     --surface: #ffffff;
     --surface-2: #ffffff;
     --border: #e4e4e4;
-    --turquoise: #40e0d0;
-    --turquoise-wash: rgba(64, 224, 208, 0.14);
-    --turquoise-ink: #15837a;
-    --orange: #ff7900;
-    --orange-wash: rgba(255, 121, 0, 0.12);
-    --orange-ink: #b35700;
+    --turquoise: #00ffef;
+    --turquoise-wash: rgba(0, 255, 239, 0.14);
+    --turquoise-ink: #0a8f83;
+    --orange: #ff6b4a;
+    --orange-wash: rgba(255, 107, 74, 0.12);
+    --orange-ink: #b34423;
     --red: #e8362e;
     --text: #0b0b0c;
     --text-dim: #55575a;
@@ -36,8 +36,9 @@
 
   html { scroll-behavior: smooth; }
 
+  /* Same full-page gradient as the homepage — see index.html for the contrast/hue verification notes */
   body {
-    background: var(--bg);
+    background: linear-gradient(180deg, #00ffef 0%, #38bdf8 35%, #38bdf8 52%, #f7fbff 60%, #ffb347 68%, #ffa500 80%, #ff6b4a 100%);
     color: var(--text);
     font-family: var(--sans);
     line-height: 1.6;
@@ -61,23 +62,28 @@
     padding: 0 24px;
   }
 
-  /* Header */
+  /* Header — small, minimal, sits above the gradient */
   header {
     position: sticky;
     top: 0;
     z-index: 100;
-    background: var(--text);
-    border-bottom: 1px solid var(--text);
+    background: rgba(255, 255, 255, 0.86);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
   }
 
+  /* logo far-left, nav-links pulled into a center-left cluster right after it,
+     CTA pushed to the far right via margin-left:auto — matches index.html */
   nav {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 18px 24px;
+    padding: 14px 24px;
     max-width: 1180px;
     margin: 0 auto;
   }
+
+  nav > a.btn-primary { margin-left: auto; }
 
   .logo {
     display: flex;
@@ -85,14 +91,14 @@
     gap: 10px;
     font-family: var(--mono);
     font-weight: 500;
-    font-size: 17px;
+    font-size: 16px;
     letter-spacing: 0.02em;
-    color: #fff;
+    color: var(--text);
   }
 
   .logo-mark {
-    width: 30px;
-    height: 30px;
+    width: 26px;
+    height: 26px;
     border-radius: var(--radius-sm);
     background: var(--orange);
     color: var(--text);
@@ -101,23 +107,24 @@
     justify-content: center;
     font-family: var(--mono);
     font-weight: 700;
-    font-size: 14px;
+    font-size: 13px;
   }
 
   .nav-links {
     display: flex;
-    gap: 36px;
+    gap: 32px;
     align-items: center;
+    margin-left: 48px;
   }
 
   .nav-links a {
-    font-size: 14px;
+    font-size: 13.5px;
     font-weight: 500;
-    color: rgba(255,255,255,0.7);
+    color: var(--text-dim);
     transition: color 0.2s ease;
   }
 
-  .nav-links a:hover { color: #fff; }
+  .nav-links a:hover { color: var(--text); }
 
   .btn {
     display: inline-flex;
@@ -127,37 +134,40 @@
     font-weight: 600;
     font-size: 14px;
     font-family: var(--sans);
-    border-radius: var(--radius-sm);
+    border-radius: 999px;
     padding: 12px 22px;
     cursor: pointer;
     border: 1.5px solid transparent;
-    transition: transform 0.15s ease;
+    transition: transform 0.15s ease, background 0.2s ease, color 0.2s ease;
     white-space: nowrap;
   }
 
+  /* Solid black fill + white text on every button — constant 21:1 contrast regardless
+     of where on the gradient it sits (see index.html for the fuller rationale) */
   .btn-primary {
-    background: var(--orange);
-    color: var(--text);
+    background: var(--text);
+    color: #fff;
   }
 
-  .btn-primary:hover { transform: translateY(-1px); }
+  .btn-primary:hover { transform: translateY(-1px); background: #2a2a2c; }
 
   .btn-ghost {
-    background: transparent;
-    color: var(--text);
-    border: 1.5px solid var(--border);
+    background: var(--text);
+    color: #fff;
+    border: 1.5px solid rgba(255, 255, 255, 0.45);
   }
 
   .btn-ghost:hover {
-    border-color: var(--text);
+    transform: translateY(-1px);
+    border-color: #fff;
   }
 
-  .btn-small { padding: 9px 16px; font-size: 13px; }
+  .btn-small { padding: 8px 16px; font-size: 13px; }
 
-  /* Footer — bookends the page with the same dark chrome as the nav */
+  /* Footer — sits directly on the gradient's deep-orange tail, no separate dark block */
   footer {
-    background: var(--text);
     padding: 40px 24px;
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
   }
 
   .footer-inner {
@@ -174,7 +184,7 @@
 
   footer .copy {
     font-size: 13px;
-    color: rgba(255,255,255,0.5);
+    color: rgba(0, 0, 0, 0.8);
     font-family: var(--mono);
   }
 
@@ -185,11 +195,11 @@
 
   footer .footer-links a {
     font-size: 13px;
-    color: rgba(255,255,255,0.65);
+    color: rgba(0, 0, 0, 0.8);
     transition: color 0.2s ease;
   }
 
-  footer .footer-links a:hover { color: #fff; }
+  footer .footer-links a:hover { color: var(--text); }
 
   @media (max-width: 640px) {
     .nav-links { display: none; }
@@ -206,7 +216,19 @@
   }
 
   .legal {
-    padding: 160px 24px 100px;
+    padding: 160px 24px 120px;
+  }
+
+  /* Dense legal text needs a readable surface on top of the page gradient — same
+     white-card pattern used for content-heavy blocks throughout the homepage */
+  .legal-card {
+    max-width: 800px;
+    margin: 0 auto;
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: var(--radius);
+    box-shadow: 0 20px 48px rgba(0, 0, 0, 0.1);
+    padding: 56px 48px;
   }
 
   .legal-header {
@@ -267,6 +289,7 @@
 
   @media (max-width: 640px) {
     .legal { padding: 120px 20px 72px; }
+    .legal-card { padding: 32px 24px; }
   }
 </style>
 </head>
@@ -280,6 +303,7 @@
     </div>
     <div class="nav-links">
       <a href="/#how-it-works">How it Works</a>
+      <a href="/#agent">APEX Agent</a>
       <a href="/#trust">Why APEX</a>
       <a href="/#faq">FAQ</a>
     </div>
@@ -290,6 +314,7 @@
 <main>
   <section class="legal">
     <div class="container">
+     <div class="legal-card">
       <div class="legal-header">
         <div class="eyebrow">Legal</div>
         <h1>Privacy Policy</h1>
@@ -322,6 +347,7 @@
         <h2>Contact</h2>
         <p>Email: <a href="mailto:desairishi592@gmail.com">desairishi592@gmail.com</a><br>Website: <a href="https://apex-landing-qlmjgrg4x-desairishi592-3286s-projects.vercel.app">apex-landing-qlmjgrg4x-desairishi592-3286s-projects.vercel.app</a></p>
       </div>
+     </div>
     </div>
   </section>
 </main>
@@ -334,6 +360,7 @@
     </div>
     <div class="footer-links">
       <a href="/#how-it-works">How it Works</a>
+      <a href="/#agent">APEX Agent</a>
       <a href="/#trust">Why APEX</a>
       <a href="/#faq">FAQ</a>
       <a href="/privacy">Privacy Policy</a>
