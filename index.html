@@ -15,12 +15,13 @@
     --surface: #ffffff;
     --surface-2: #ffffff;
     --border: #e4e4e4;
-    --turquoise: #40e0d0;
-    --turquoise-wash: rgba(64, 224, 208, 0.14);
-    --turquoise-ink: #15837a; /* text-safe darker variant — the vivid turquoise fails contrast as text-on-white (1.6:1), only usable as a fill with black text on top */
-    --orange: #ff7900;
-    --orange-wash: rgba(255, 121, 0, 0.12);
-    --orange-ink: #b35700; /* text-safe darker variant — the vivid orange fails contrast as text-on-white (2.6:1), only usable as a fill with black text on top */
+    --turquoise: #00ffef;
+    --turquoise-wash: rgba(0, 255, 239, 0.14);
+    --turquoise-ink: #0a8f83; /* text-safe darker variant — the vivid turquoise fails contrast as text-on-white, only usable as a fill with black text on top */
+    --orange: #ff6b4a;
+    --orange-wash: rgba(255, 107, 74, 0.12);
+    --orange-ink: #b34423; /* text-safe darker variant — the vivid orange fails contrast as text-on-white, only usable as a fill with black text on top */
+    --gradient-hero: linear-gradient(135deg, #00ffef 0%, #ffa500 55%, #ff6b4a 100%);
     --red: #e8362e;
     --text: #0b0b0c;
     --text-dim: #55575a;
@@ -61,20 +62,22 @@
     padding: 0 24px;
   }
 
-  /* Header */
+  /* Header — small, minimal, sits above the gradient hero */
   header {
     position: sticky;
     top: 0;
     z-index: 100;
-    background: var(--text);
-    border-bottom: 1px solid var(--text);
+    background: rgba(255, 255, 255, 0.86);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
   }
 
   nav {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 18px 24px;
+    padding: 14px 24px;
     max-width: 1180px;
     margin: 0 auto;
   }
@@ -85,14 +88,14 @@
     gap: 10px;
     font-family: var(--mono);
     font-weight: 500;
-    font-size: 17px;
+    font-size: 16px;
     letter-spacing: 0.02em;
-    color: #fff;
+    color: var(--text);
   }
 
   .logo-mark {
-    width: 30px;
-    height: 30px;
+    width: 26px;
+    height: 26px;
     border-radius: var(--radius-sm);
     background: var(--orange);
     color: var(--text);
@@ -101,23 +104,23 @@
     justify-content: center;
     font-family: var(--mono);
     font-weight: 700;
-    font-size: 14px;
+    font-size: 13px;
   }
 
   .nav-links {
     display: flex;
-    gap: 36px;
+    gap: 32px;
     align-items: center;
   }
 
   .nav-links a {
-    font-size: 14px;
+    font-size: 13.5px;
     font-weight: 500;
-    color: rgba(255,255,255,0.7);
+    color: var(--text-dim);
     transition: color 0.2s ease;
   }
 
-  .nav-links a:hover { color: #fff; }
+  .nav-links a:hover { color: var(--text); }
 
   .btn {
     display: inline-flex;
@@ -127,39 +130,41 @@
     font-weight: 600;
     font-size: 14px;
     font-family: var(--sans);
-    border-radius: var(--radius-sm);
+    border-radius: 999px;
     padding: 12px 22px;
     cursor: pointer;
     border: 1.5px solid transparent;
-    transition: transform 0.15s ease;
+    transition: transform 0.15s ease, background 0.2s ease, color 0.2s ease;
     white-space: nowrap;
   }
 
   .btn-primary {
-    background: var(--orange);
-    color: var(--text);
+    background: var(--text);
+    color: #fff;
   }
 
-  .btn-primary:hover { transform: translateY(-1px); }
+  .btn-primary:hover { transform: translateY(-1px); background: #2a2a2c; }
 
   .btn-ghost {
     background: transparent;
     color: var(--text);
-    border: 1.5px solid var(--border);
+    border: 1.5px solid var(--text);
   }
 
   .btn-ghost:hover {
-    border-color: var(--text);
+    background: var(--text);
+    color: #fff;
   }
 
-  .btn-small { padding: 9px 16px; font-size: 13px; }
+  .btn-small { padding: 8px 16px; font-size: 13px; }
 
-  /* Hero */
+  /* Hero — the only gradient surface on the page; black text verified 7.3–16.5:1 across every stop */
   .hero {
     position: relative;
     z-index: 1;
-    padding: 120px 24px 100px;
+    padding: 150px 24px 110px;
     text-align: center;
+    background: var(--gradient-hero);
   }
 
   .badge {
@@ -168,40 +173,42 @@
     gap: 8px;
     padding: 6px 14px;
     border-radius: 999px;
-    background: var(--turquoise-wash);
-    border: 1px solid rgba(64, 224, 208, 0.4);
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.12);
     color: var(--text);
     font-size: 13px;
     font-weight: 600;
-    margin-bottom: 28px;
+    margin-bottom: 32px;
     font-family: var(--mono);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
   }
 
   .badge .dot {
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: var(--orange);
+    background: var(--text);
   }
 
   .hero h1 {
     font-family: var(--display);
-    font-size: clamp(36px, 6vw, 68px);
+    font-size: clamp(42px, 8vw, 92px);
     font-weight: 600;
-    letter-spacing: -0.01em;
-    line-height: 1.1;
-    max-width: 900px;
-    margin: 0 auto 24px;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    max-width: 980px;
+    margin: 0 auto 28px;
     text-wrap: balance;
+    color: var(--text);
   }
 
-  .hero h1 .accent { color: var(--turquoise-ink); }
+  .hero h1 .accent { color: inherit; }
 
   .hero p {
-    font-size: 19px;
-    color: var(--text-dim);
+    font-size: 20px;
+    color: rgba(0, 0, 0, 0.8);
     max-width: 620px;
-    margin: 0 auto 40px;
+    margin: 0 auto 44px;
   }
 
   .hero-cta {
@@ -209,26 +216,26 @@
     gap: 16px;
     justify-content: center;
     flex-wrap: wrap;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
   }
 
   .hero-note {
     font-size: 13px;
-    color: var(--text-dimmer);
+    color: rgba(0, 0, 0, 0.8);
     font-family: var(--mono);
   }
 
-  .btn-lg { padding: 15px 30px; font-size: 15.5px; border-radius: var(--radius-sm); }
+  .btn-lg { padding: 16px 32px; font-size: 15.5px; }
 
   /* Hero visual */
   .hero-visual {
     max-width: 900px;
-    margin: 72px auto 0;
+    margin: 80px auto 0;
     border-radius: var(--radius);
-    border: 1px solid var(--border);
+    border: 1px solid rgba(0, 0, 0, 0.08);
     background: #fff;
     padding: 28px;
-    box-shadow: 0 12px 32px rgba(0,0,0,0.08);
+    box-shadow: 0 20px 48px rgba(0,0,0,0.16);
   }
 
   .visual-header {
@@ -294,13 +301,13 @@
   section {
     position: relative;
     z-index: 1;
-    padding: 100px 24px;
+    padding: 120px 24px;
   }
 
   .section-head {
     text-align: center;
     max-width: 640px;
-    margin: 0 auto 64px;
+    margin: 0 auto 72px;
   }
 
   .eyebrow {
@@ -483,19 +490,32 @@
 
   .faq-item.open .faq-answer { max-height: 260px; }
 
-  /* Final CTA */
+  /* Final CTA — white card with a thin gradient accent bar to echo the hero */
   .final-cta {
     text-align: center;
-    padding: 100px 24px 120px;
+    padding: 100px 24px 140px;
   }
 
   .final-cta-box {
+    position: relative;
     max-width: 760px;
     margin: 0 auto;
-    background: var(--turquoise-wash);
-    border: 1px solid rgba(64, 224, 208, 0.4);
+    background: #fff;
+    border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 64px 40px;
+    padding: 68px 40px 64px;
+    box-shadow: 0 20px 48px rgba(0,0,0,0.06);
+    overflow: hidden;
+  }
+
+  .final-cta-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--gradient-hero);
   }
 
   .final-cta-box h2 {
@@ -513,7 +533,7 @@
     margin-bottom: 36px;
   }
 
-  /* Footer — bookends the page with the same dark chrome as the nav */
+  /* Footer — dark chrome bookend, deliberately kept distinct from the light nav to frame the page */
   footer {
     background: var(--text);
     padding: 40px 24px;
@@ -560,8 +580,11 @@
   @media (max-width: 640px) {
     .nav-links { display: none; }
     .steps { grid-template-columns: 1fr; }
-    .hero { padding: 90px 20px 70px; }
+    .hero { padding: 100px 20px 64px; }
+    .hero-visual { margin-top: 56px; padding: 20px; }
     section { padding: 72px 20px; }
+    .section-head { margin-bottom: 48px; }
+    .final-cta { padding: 72px 20px 90px; }
     .final-cta-box { padding: 48px 24px; }
   }
 </style>
