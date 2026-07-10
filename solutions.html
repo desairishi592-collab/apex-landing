@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Solutions — APEX</title>
+<meta name="description" content="Built for two audiences — founders checking their own business, and investors doing diligence — backed by an APEX Agent that keeps watching after the scan." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg-alt: #f7f7f5;
+    --surface: #ffffff;
+    --surface-2: #ffffff;
+    --border: #e4e4e4;
+    --turquoise: #00ffef;
+    --turquoise-wash: rgba(0, 255, 239, 0.14);
+    --turquoise-ink: #0a8f83;
+    --orange: #ff6b4a;
+    --orange-wash: rgba(255, 107, 74, 0.12);
+    --orange-ink: #b34423;
+    --red: #e8362e;
+    --text: #0b0b0c;
+    --text-dim: #55575a;
+    --text-dimmer: #86888b;
+    --radius: 6px;
+    --radius-sm: 3px;
+    --mono: 'IBM Plex Mono', ui-monospace, monospace;
+    --sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --display: 'Fraunces', Georgia, serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: linear-gradient(180deg, #00ffef 0%, #38bdf8 35%, #38bdf8 52%, #f7fbff 60%, #ffb347 68%, #ffa500 80%, #ff6b4a 100%);
+    color: var(--text);
+    font-family: var(--sans);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  a { color: inherit; text-decoration: none; }
+
+  :focus-visible {
+    outline: 2px solid var(--text);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  }
+
+  .container {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255, 255, 255, 0.86);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  nav {
+    display: flex;
+    align-items: center;
+    padding: 14px 24px;
+    max-width: 1180px;
+    margin: 0 auto;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--mono);
+    font-weight: 500;
+    font-size: 16px;
+    letter-spacing: 0.02em;
+    color: var(--text);
+  }
+
+  .logo-mark {
+    width: 26px;
+    height: 26px;
+    border-radius: var(--radius-sm);
+    background: var(--orange);
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 13px;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 28px;
+    align-items: center;
+    margin-left: 44px;
+  }
+
+  .nav-links a {
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--text-dim);
+    transition: color 0.2s ease;
+  }
+
+  .nav-links a:hover, .nav-links a.current { color: var(--text); }
+
+  .nav-cta-group {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 22px;
+  }
+
+  .nav-contact-link {
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--text-dim);
+    transition: color 0.2s ease;
+  }
+
+  .nav-contact-link:hover { color: var(--text); }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    font-family: var(--sans);
+    border-radius: 999px;
+    padding: 12px 22px;
+    cursor: pointer;
+    border: 1.5px solid transparent;
+    transition: transform 0.15s ease, background 0.2s ease, color 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .btn-primary {
+    background: var(--text);
+    color: #fff;
+  }
+
+  .btn-primary:hover { transform: translateY(-1px); background: #2a2a2c; }
+
+  .btn-small { padding: 8px 16px; font-size: 13px; }
+  .btn-lg { padding: 16px 32px; font-size: 15.5px; }
+
+  .page-header {
+    padding: 150px 24px 40px;
+    text-align: center;
+  }
+
+  .page-header .eyebrow { margin-bottom: 14px; }
+
+  .page-header h1 {
+    font-family: var(--display);
+    font-size: clamp(36px, 6vw, 60px);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    max-width: 780px;
+    margin: 0 auto 20px;
+    text-wrap: balance;
+  }
+
+  .page-header p {
+    font-size: 18px;
+    color: rgba(0, 0, 0, 0.8);
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
+  section {
+    position: relative;
+    z-index: 1;
+    padding: 100px 24px;
+  }
+
+  .section-head {
+    text-align: center;
+    max-width: 640px;
+    margin: 0 auto 56px;
+  }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 14px;
+  }
+
+  .section-head h2 {
+    font-family: var(--display);
+    font-size: clamp(26px, 4vw, 38px);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin-bottom: 16px;
+    text-wrap: balance;
+  }
+
+  .section-head p {
+    color: rgba(0, 0, 0, 0.8);
+    font-size: 17px;
+  }
+
+  /* Founders / Investors split */
+  .audience-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .audience-card {
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: var(--radius);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
+    padding: 40px 36px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .audience-card .eyebrow { margin-bottom: 12px; }
+
+  .audience-card h3 {
+    font-family: var(--display);
+    font-size: 26px;
+    font-weight: 600;
+    margin-bottom: 14px;
+  }
+
+  .audience-card p.desc {
+    font-size: 15px;
+    color: var(--text-dim);
+    margin-bottom: 22px;
+  }
+
+  .audience-card ul {
+    margin: 0 0 28px 20px;
+    color: var(--text-dim);
+    font-size: 14.5px;
+    flex-grow: 1;
+  }
+
+  .audience-card li { margin-bottom: 10px; }
+
+  .trust-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .trust-card {
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: var(--radius);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
+    padding: 28px;
+  }
+
+  .trust-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 18px;
+  }
+
+  .trust-card:nth-child(3n+1) .trust-icon { background: var(--turquoise); }
+  .trust-card:nth-child(3n+2) .trust-icon { background: var(--orange); }
+  .trust-card:nth-child(3n+3) .trust-icon { background: var(--turquoise-wash); }
+
+  .trust-icon svg { width: 20px; height: 20px; stroke: var(--text); }
+
+  .trust-card h3 {
+    font-size: 16.5px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .trust-card p {
+    font-size: 14px;
+    color: var(--text-dim);
+  }
+
+  .note-strip {
+    max-width: 1000px;
+    margin: 32px auto 0;
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: var(--radius);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
+    padding: 20px 28px;
+    font-size: 14px;
+    color: var(--text-dim);
+    text-align: center;
+  }
+
+  .note-strip strong { color: var(--text); }
+
+  .final-cta {
+    text-align: center;
+    padding: 80px 24px 140px;
+  }
+
+  .final-cta-box {
+    max-width: 760px;
+    margin: 0 auto;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 64px 40px;
+    box-shadow: 0 20px 48px rgba(0,0,0,0.1);
+  }
+
+  .final-cta-box h2 {
+    font-family: var(--display);
+    font-size: clamp(26px, 4vw, 36px);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin-bottom: 16px;
+    text-wrap: balance;
+  }
+
+  .final-cta-box p {
+    color: var(--text-dim);
+    font-size: 16px;
+    margin-bottom: 36px;
+  }
+
+  footer {
+    padding: 40px 24px;
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
+  }
+
+  .footer-inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .footer-inner .logo { font-size: 15px; }
+
+  footer .copy {
+    font-size: 13px;
+    color: rgba(0, 0, 0, 0.8);
+    font-family: var(--mono);
+  }
+
+  footer .footer-links {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  footer .footer-links a {
+    font-size: 13px;
+    color: rgba(0, 0, 0, 0.8);
+    transition: color 0.2s ease;
+  }
+
+  footer .footer-links a:hover { color: var(--text); }
+
+  @media (max-width: 900px) {
+    .audience-grid { grid-template-columns: 1fr; }
+    .trust-grid { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 640px) {
+    .nav-links { display: none; }
+    .nav-contact-link { display: none; }
+    .page-header { padding: 120px 20px 32px; }
+    section { padding: 72px 20px; }
+    .audience-card { padding: 28px 24px; }
+    .final-cta { padding: 60px 20px 90px; }
+    .final-cta-box { padding: 48px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <nav>
+    <div class="logo">
+      <div class="logo-mark">A</div>
+      APEX
+    </div>
+    <div class="nav-links">
+      <a href="/meet-apex">Meet APEX</a>
+      <a href="/platform">Platform</a>
+      <a href="/solutions" class="current">Solutions</a>
+      <a href="/resources">Resources</a>
+      <a href="https://apex-desairishi592-3286s-projects.vercel.app">Login</a>
+    </div>
+    <div class="nav-cta-group">
+      <a href="mailto:desairishi592@gmail.com" class="nav-contact-link">Contact Us</a>
+      <a href="https://apex-desairishi592-3286s-projects.vercel.app" class="btn btn-primary btn-small">Try APEX</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <section class="page-header">
+    <div class="container">
+      <div class="eyebrow">Solutions</div>
+      <h1>Whichever side of the table you're on</h1>
+      <p>Founders who want to catch issues before they hurt fundraising or an exit, and investors who want a fast, standardized read during diligence — same engine, two entry points.</p>
+    </div>
+  </section>
+
+  <section id="audiences">
+    <div class="container">
+      <div class="audience-grid">
+        <div class="audience-card">
+          <div class="eyebrow">For Founders</div>
+          <h3>Check your own business first</h3>
+          <p class="desc">Run your own business through the same due-diligence checklist investors and lenders use — before they do.</p>
+          <ul>
+            <li>Owner-mode scan built for a private business, not a public ticker</li>
+            <li>A clear, weighted health score with plain-English explanations</li>
+            <li>Red flags and prioritized takeaways surfaced before diligence does</li>
+          </ul>
+          <a href="https://apex-desairishi592-3286s-projects.vercel.app?mode=owner" class="btn btn-primary">Scan your business →</a>
+        </div>
+        <div class="audience-card">
+          <div class="eyebrow">For Investors</div>
+          <h3>A standardized read, fast</h3>
+          <p class="desc">Public stock or private company — get an investor-grade report without building the checklist yourself.</p>
+          <ul>
+            <li>Public stock scans and private-company diligence scans, one form</li>
+            <li>Sector-benchmarked scoring with real peer/competitor comparison</li>
+            <li>Portfolio and watchlist tracking, not just one-off reports</li>
+          </ul>
+          <a href="https://apex-desairishi592-3286s-projects.vercel.app?mode=investor" class="btn btn-primary">Start diligence →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="agent">
+    <div class="container">
+      <div class="section-head">
+        <div class="eyebrow">APEX Agent</div>
+        <h2>Stays on watch after the scan</h2>
+        <p>A scan is a snapshot. The Agent keeps watching everything you track and remembers your holdings the next time you ask a question.</p>
+      </div>
+      <div class="trust-grid">
+        <div class="trust-card">
+          <div class="trust-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div>
+          <h3>Proactive monitoring</h3>
+          <p>Re-scans your watchlist and portfolio, surfacing score drops, new red flags, and sector-relative shifts — each with a concrete research checklist, not just a ping.</p>
+        </div>
+        <div class="trust-card">
+          <div class="trust-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10M12 20V4M6 20v-6"/></svg></div>
+          <h3>Compare-on-alert</h3>
+          <p>When a red flag fires, the Agent attaches a factual one-line comparison to the most relevant peer — not the flag in isolation.</p>
+        </div>
+        <div class="trust-card">
+          <div class="trust-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="4"/><path d="M2.5 21a6.5 6.5 0 0 1 13 0"/><circle cx="17" cy="7" r="3"/><path d="M21.5 21a5.5 5.5 0 0 0-6-5.47"/></svg></div>
+          <h3>Cross-holding patterns</h3>
+          <p>If two or more holdings trip the same flag in one run, that's one consolidated "shared exposure" notification — not separate pings.</p>
+        </div>
+        <div class="trust-card">
+          <div class="trust-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg></div>
+          <h3>Concentration monitoring</h3>
+          <p>Tracks sector concentration across your combined watchlist and portfolio, and nudges you when it's lopsided.</p>
+        </div>
+        <div class="trust-card">
+          <div class="trust-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18"/><path d="M8 2v4M16 2v4"/></svg></div>
+          <h3>Weekly digest</h3>
+          <p>One connected narrative each week — score trend, watchlist changes, movers, and upcoming earnings — not a pile of separate bullets.</p>
+        </div>
+        <div class="trust-card">
+          <div class="trust-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V10M18 20V4M6 20v-4"/><circle cx="6" cy="14" r="1.5" fill="currentColor" stroke="none"/></svg></div>
+          <h3>Custom watch conditions</h3>
+          <p>Set your own bounded rule — "alert me if the P/E crosses 35" — and the Agent watches it for you.</p>
+        </div>
+      </div>
+      <div class="note-strip"><strong>Informational only.</strong> The Agent reports what changed and what to check — it never places trades, and never tells you what to buy or sell.</div>
+    </div>
+  </section>
+
+  <section class="final-cta">
+    <div class="container">
+      <div class="final-cta-box">
+        <h2>Find out what the pros already know</h2>
+        <p>Run your first scan in 30 seconds and get an investor-grade health report on any company.</p>
+        <a href="https://apex-desairishi592-3286s-projects.vercel.app" class="btn btn-primary btn-lg">Try APEX</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div class="logo">
+      <div class="logo-mark">A</div>
+      APEX
+    </div>
+    <div class="footer-links">
+      <a href="/meet-apex">Meet APEX</a>
+      <a href="/platform">Platform</a>
+      <a href="/solutions">Solutions</a>
+      <a href="/resources">Resources</a>
+      <a href="/privacy">Privacy Policy</a>
+    </div>
+    <div class="copy">© 2026 APEX. All rights reserved.</div>
+  </div>
+</footer>
+
+</body>
+</html>

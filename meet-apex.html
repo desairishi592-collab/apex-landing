@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Meet APEX — APEX</title>
+<meta name="description" content="The story and principles behind APEX — investor-grade rigor, and strictly informational by design." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg-alt: #f7f7f5;
+    --surface: #ffffff;
+    --surface-2: #ffffff;
+    --border: #e4e4e4;
+    --turquoise: #00ffef;
+    --turquoise-wash: rgba(0, 255, 239, 0.14);
+    --turquoise-ink: #0a8f83;
+    --orange: #ff6b4a;
+    --orange-wash: rgba(255, 107, 74, 0.12);
+    --orange-ink: #b34423;
+    --red: #e8362e;
+    --text: #0b0b0c;
+    --text-dim: #55575a;
+    --text-dimmer: #86888b;
+    --radius: 6px;
+    --radius-sm: 3px;
+    --mono: 'IBM Plex Mono', ui-monospace, monospace;
+    --sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --display: 'Fraunces', Georgia, serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  /* Same full-page gradient as the homepage — see index.html for the contrast/hue verification notes */
+  body {
+    background: linear-gradient(180deg, #00ffef 0%, #38bdf8 35%, #38bdf8 52%, #f7fbff 60%, #ffb347 68%, #ffa500 80%, #ff6b4a 100%);
+    color: var(--text);
+    font-family: var(--sans);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  a { color: inherit; text-decoration: none; }
+
+  :focus-visible {
+    outline: 2px solid var(--text);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  }
+
+  .container {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255, 255, 255, 0.86);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  nav {
+    display: flex;
+    align-items: center;
+    padding: 14px 24px;
+    max-width: 1180px;
+    margin: 0 auto;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--mono);
+    font-weight: 500;
+    font-size: 16px;
+    letter-spacing: 0.02em;
+    color: var(--text);
+  }
+
+  .logo-mark {
+    width: 26px;
+    height: 26px;
+    border-radius: var(--radius-sm);
+    background: var(--orange);
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 13px;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 28px;
+    align-items: center;
+    margin-left: 44px;
+  }
+
+  .nav-links a {
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--text-dim);
+    transition: color 0.2s ease;
+  }
+
+  .nav-links a:hover, .nav-links a.current { color: var(--text); }
+
+  .nav-cta-group {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 22px;
+  }
+
+  .nav-contact-link {
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--text-dim);
+    transition: color 0.2s ease;
+  }
+
+  .nav-contact-link:hover { color: var(--text); }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    font-family: var(--sans);
+    border-radius: 999px;
+    padding: 12px 22px;
+    cursor: pointer;
+    border: 1.5px solid transparent;
+    transition: transform 0.15s ease, background 0.2s ease, color 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .btn-primary {
+    background: var(--text);
+    color: #fff;
+  }
+
+  .btn-primary:hover { transform: translateY(-1px); background: #2a2a2c; }
+
+  .btn-small { padding: 8px 16px; font-size: 13px; }
+  .btn-lg { padding: 16px 32px; font-size: 15.5px; }
+
+  /* Page header — same idea as the old hero, sized down for a subpage */
+  .page-header {
+    padding: 150px 24px 40px;
+    text-align: center;
+  }
+
+  .page-header .eyebrow { margin-bottom: 14px; }
+
+  .page-header h1 {
+    font-family: var(--display);
+    font-size: clamp(36px, 6vw, 60px);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    max-width: 780px;
+    margin: 0 auto 20px;
+    text-wrap: balance;
+  }
+
+  .page-header p {
+    font-size: 18px;
+    color: rgba(0, 0, 0, 0.8);
+    max-width: 620px;
+    margin: 0 auto;
+  }
+
+  section {
+    position: relative;
+    z-index: 1;
+    padding: 100px 24px;
+  }
+
+  .section-head {
+    text-align: center;
+    max-width: 640px;
+    margin: 0 auto 56px;
+  }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 14px;
+  }
+
+  .section-head h2 {
+    font-family: var(--display);
+    font-size: clamp(26px, 4vw, 38px);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin-bottom: 16px;
+    text-wrap: balance;
+  }
+
+  .section-head p {
+    color: rgba(0, 0, 0, 0.8);
+    font-size: 17px;
+  }
+
+  .trust-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .trust-card {
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: var(--radius);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
+    padding: 32px;
+  }
+
+  .trust-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+
+  .trust-card:nth-child(3n+1) .trust-icon { background: var(--turquoise); }
+  .trust-card:nth-child(3n+2) .trust-icon { background: var(--orange); }
+  .trust-card:nth-child(3n+3) .trust-icon { background: var(--turquoise-wash); }
+
+  .trust-icon svg { width: 22px; height: 22px; stroke: var(--text); }
+
+  .trust-card h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+
+  .trust-card p {
+    font-size: 14.5px;
+    color: var(--text-dim);
+  }
+
+  /* Principles — dense prose, so it gets the same white-card surface treatment as
+     everything else that can't sit directly on the gradient */
+  .principles-card {
+    max-width: 800px;
+    margin: 0 auto;
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: var(--radius);
+    box-shadow: 0 20px 48px rgba(0, 0, 0, 0.1);
+    padding: 48px;
+  }
+
+  .principles-card h3 {
+    font-family: var(--display);
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 14px;
+  }
+
+  .principles-card p {
+    font-size: 15.5px;
+    color: var(--text-dim);
+    margin-bottom: 16px;
+  }
+
+  .principles-card p:last-child { margin-bottom: 0; }
+
+  .principles-card strong { color: var(--text); }
+
+  .final-cta {
+    text-align: center;
+    padding: 80px 24px 140px;
+  }
+
+  .final-cta-box {
+    max-width: 760px;
+    margin: 0 auto;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 64px 40px;
+    box-shadow: 0 20px 48px rgba(0,0,0,0.1);
+  }
+
+  .final-cta-box h2 {
+    font-family: var(--display);
+    font-size: clamp(26px, 4vw, 36px);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin-bottom: 16px;
+    text-wrap: balance;
+  }
+
+  .final-cta-box p {
+    color: var(--text-dim);
+    font-size: 16px;
+    margin-bottom: 36px;
+  }
+
+  footer {
+    padding: 40px 24px;
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
+  }
+
+  .footer-inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .footer-inner .logo { font-size: 15px; }
+
+  footer .copy {
+    font-size: 13px;
+    color: rgba(0, 0, 0, 0.8);
+    font-family: var(--mono);
+  }
+
+  footer .footer-links {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  footer .footer-links a {
+    font-size: 13px;
+    color: rgba(0, 0, 0, 0.8);
+    transition: color 0.2s ease;
+  }
+
+  footer .footer-links a:hover { color: var(--text); }
+
+  @media (max-width: 900px) {
+    .trust-grid { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 640px) {
+    .nav-links { display: none; }
+    .nav-contact-link { display: none; }
+    .page-header { padding: 120px 20px 32px; }
+    section { padding: 72px 20px; }
+    .principles-card { padding: 32px 24px; }
+    .final-cta { padding: 60px 20px 90px; }
+    .final-cta-box { padding: 48px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <nav>
+    <div class="logo">
+      <div class="logo-mark">A</div>
+      APEX
+    </div>
+    <div class="nav-links">
+      <a href="/meet-apex" class="current">Meet APEX</a>
+      <a href="/platform">Platform</a>
+      <a href="/solutions">Solutions</a>
+      <a href="/resources">Resources</a>
+      <a href="https://apex-desairishi592-3286s-projects.vercel.app">Login</a>
+    </div>
+    <div class="nav-cta-group">
+      <a href="mailto:desairishi592@gmail.com" class="nav-contact-link">Contact Us</a>
+      <a href="https://apex-desairishi592-3286s-projects.vercel.app" class="btn btn-primary btn-small">Try APEX</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <section class="page-header">
+    <div class="container">
+      <div class="eyebrow">Meet APEX</div>
+      <h1>Built to show you what the pros already know</h1>
+      <p>APEX turns public financial data into a clear, investor-grade health report — no analysts, no spreadsheets, no waiting. Here's what that's actually built on.</p>
+    </div>
+  </section>
+
+  <section id="why">
+    <div class="container">
+      <div class="section-head">
+        <div class="eyebrow">Why APEX</div>
+        <h2>Built for the scrutiny of real due diligence</h2>
+        <p>APEX is modeled on the exact frameworks investors and auditors use — so what you see is what they'll see.</p>
+      </div>
+      <div class="trust-grid">
+        <div class="trust-card">
+          <div class="trust-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/></svg>
+          </div>
+          <h3>Investor-grade rigor</h3>
+          <p>Every scan follows the same due diligence checklist used by VCs and lenders, so nothing gets missed.</p>
+        </div>
+        <div class="trust-card">
+          <div class="trust-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <h3>Private by design</h3>
+          <p>Your data is encrypted in transit and at rest, never sold, and never used to train third-party models.</p>
+        </div>
+        <div class="trust-card">
+          <div class="trust-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-4 4"/></svg>
+          </div>
+          <h3>Trusted signals, not guesses</h3>
+          <p>Every score is backed by transparent methodology and traceable to the underlying data point.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="principles">
+    <div class="container">
+      <div class="section-head">
+        <div class="eyebrow">Our principle</div>
+        <h2>Informational, never prescriptive</h2>
+        <p>The same rule applies everywhere in APEX, including the parts you don't see.</p>
+      </div>
+      <div class="principles-card">
+        <h3>Here's what changed — never "here's what to do"</h3>
+        <p>Every APEX Agent notification, checklist, and portfolio digest is written to say <strong>what changed and what to check</strong> — never what to buy or sell. That's not a style guideline someone has to remember; it's enforced structurally. A fixed instruction block is baked into every prompt that generates Agent output, so it isn't left to be remembered per feature.</p>
+        <p>Free-form writing — like the weekly portfolio digest — is harder to constrain than a short checklist, so it gets a second layer: a code-level check that scans the model's own output for anything that still reads as a recommendation, and falls back to a purely factual, non-AI summary if it finds one. Two independent checks, not one policy and a hope.</p>
+        <p>The result is consistent across every feature: score drops, red flags, sector-relative shifts, concentration nudges — all reported as observations you can act on yourself, never as instructions.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="final-cta">
+    <div class="container">
+      <div class="final-cta-box">
+        <h2>Find out what the pros already know</h2>
+        <p>Run your first scan in 30 seconds and get an investor-grade health report on any company.</p>
+        <a href="https://apex-desairishi592-3286s-projects.vercel.app" class="btn btn-primary btn-lg">Try APEX</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div class="logo">
+      <div class="logo-mark">A</div>
+      APEX
+    </div>
+    <div class="footer-links">
+      <a href="/meet-apex">Meet APEX</a>
+      <a href="/platform">Platform</a>
+      <a href="/solutions">Solutions</a>
+      <a href="/resources">Resources</a>
+      <a href="/privacy">Privacy Policy</a>
+    </div>
+    <div class="copy">© 2026 APEX. All rights reserved.</div>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -83,7 +83,21 @@
     margin: 0 auto;
   }
 
-  nav > a.btn-primary { margin-left: auto; }
+  .nav-cta-group {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 22px;
+  }
+
+  .nav-contact-link {
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--text-dim);
+    transition: color 0.2s ease;
+  }
+
+  .nav-contact-link:hover { color: var(--text); }
 
   .logo {
     display: flex;
@@ -112,9 +126,9 @@
 
   .nav-links {
     display: flex;
-    gap: 32px;
+    gap: 28px;
     align-items: center;
-    margin-left: 48px;
+    margin-left: 44px;
   }
 
   .nav-links a {
@@ -203,6 +217,7 @@
 
   @media (max-width: 640px) {
     .nav-links { display: none; }
+    .nav-contact-link { display: none; }
   }
 
   /* Legal page content */
@@ -302,12 +317,16 @@
       APEX
     </div>
     <div class="nav-links">
-      <a href="/#how-it-works">How it Works</a>
-      <a href="/#agent">APEX Agent</a>
-      <a href="/#trust">Why APEX</a>
-      <a href="/#faq">FAQ</a>
+      <a href="/meet-apex">Meet APEX</a>
+      <a href="/platform">Platform</a>
+      <a href="/solutions">Solutions</a>
+      <a href="/resources">Resources</a>
+      <a href="https://apex-desairishi592-3286s-projects.vercel.app/">Login</a>
     </div>
-    <a href="https://apex-desairishi592-3286s-projects.vercel.app/" class="btn btn-primary btn-small">Get Started</a>
+    <div class="nav-cta-group">
+      <a href="mailto:desairishi592@gmail.com" class="nav-contact-link">Contact Us</a>
+      <a href="https://apex-desairishi592-3286s-projects.vercel.app/" class="btn btn-primary btn-small">Try APEX</a>
+    </div>
   </nav>
 </header>
 
@@ -359,10 +378,10 @@
       APEX
     </div>
     <div class="footer-links">
-      <a href="/#how-it-works">How it Works</a>
-      <a href="/#agent">APEX Agent</a>
-      <a href="/#trust">Why APEX</a>
-      <a href="/#faq">FAQ</a>
+      <a href="/meet-apex">Meet APEX</a>
+      <a href="/platform">Platform</a>
+      <a href="/solutions">Solutions</a>
+      <a href="/resources">Resources</a>
       <a href="/privacy">Privacy Policy</a>
     </div>
     <div class="copy">&copy; 2026 APEX. All rights reserved.</div>

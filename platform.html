@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Platform — APEX</title>
+<meta name="description" content="How APEX actually scores a company: sector-benchmarked scoring, explainable sub-scores, red-flag detection, risk timelines, insider sentiment, and peer comparison." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg-alt: #f7f7f5;
+    --surface: #ffffff;
+    --surface-2: #ffffff;
+    --border: #e4e4e4;
+    --turquoise: #00ffef;
+    --turquoise-wash: rgba(0, 255, 239, 0.14);
+    --turquoise-ink: #0a8f83;
+    --orange: #ff6b4a;
+    --orange-wash: rgba(255, 107, 74, 0.12);
+    --orange-ink: #b34423;
+    --red: #e8362e;
+    --text: #0b0b0c;
+    --text-dim: #55575a;
+    --text-dimmer: #86888b;
+    --radius: 6px;
+    --radius-sm: 3px;
+    --mono: 'IBM Plex Mono', ui-monospace, monospace;
+    --sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --display: 'Fraunces', Georgia, serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: linear-gradient(180deg, #00ffef 0%, #38bdf8 35%, #38bdf8 52%, #f7fbff 60%, #ffb347 68%, #ffa500 80%, #ff6b4a 100%);
+    color: var(--text);
+    font-family: var(--sans);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  a { color: inherit; text-decoration: none; }
+
+  :focus-visible {
+    outline: 2px solid var(--text);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  }
+
+  .container {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255, 255, 255, 0.86);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  nav {
+    display: flex;
+    align-items: center;
+    padding: 14px 24px;
+    max-width: 1180px;
+    margin: 0 auto;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--mono);
+    font-weight: 500;
+    font-size: 16px;
+    letter-spacing: 0.02em;
+    color: var(--text);
+  }
+
+  .logo-mark {
+    width: 26px;
+    height: 26px;
+    border-radius: var(--radius-sm);
+    background: var(--orange);
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 13px;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 28px;
+    align-items: center;
+    margin-left: 44px;
+  }
+
+  .nav-links a {
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--text-dim);
+    transition: color 0.2s ease;
+  }
+
+  .nav-links a:hover, .nav-links a.current { color: var(--text); }
+
+  .nav-cta-group {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 22px;
+  }
+
+  .nav-contact-link {
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--text-dim);
+    transition: color 0.2s ease;
+  }
+
+  .nav-contact-link:hover { color: var(--text); }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    font-family: var(--sans);
+    border-radius: 999px;
+    padding: 12px 22px;
+    cursor: pointer;
+    border: 1.5px solid transparent;
+    transition: transform 0.15s ease, background 0.2s ease, color 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .btn-primary {
+    background: var(--text);
+    color: #fff;
+  }
+
+  .btn-primary:hover { transform: translateY(-1px); background: #2a2a2c; }
+
+  .btn-small { padding: 8px 16px; font-size: 13px; }
+  .btn-lg { padding: 16px 32px; font-size: 15.5px; }
+
+  .page-header {
+    padding: 150px 24px 40px;
+    text-align: center;
+  }
+
+  .page-header .eyebrow { margin-bottom: 14px; }
+
+  .page-header h1 {
+    font-family: var(--display);
+    font-size: clamp(36px, 6vw, 60px);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    max-width: 780px;
+    margin: 0 auto 20px;
+    text-wrap: balance;
+  }
+
+  .page-header p {
+    font-size: 18px;
+    color: rgba(0, 0, 0, 0.8);
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
+  section {
+    position: relative;
+    z-index: 1;
+    padding: 100px 24px;
+  }
+
+  .section-head {
+    text-align: center;
+    max-width: 640px;
+    margin: 0 auto 56px;
+  }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 14px;
+  }
+
+  .section-head h2 {
+    font-family: var(--display);
+    font-size: clamp(26px, 4vw, 38px);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin-bottom: 16px;
+    text-wrap: balance;
+  }
+
+  .section-head p {
+    color: rgba(0, 0, 0, 0.8);
+    font-size: 17px;
+  }
+
+  .steps {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+
+  .step {
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: var(--radius);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
+    padding: 28px 22px;
+    position: relative;
+  }
+
+  .step-num {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mono);
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+
+  .step:nth-child(odd) .step-num { background: var(--turquoise); }
+  .step:nth-child(even) .step-num { background: var(--orange); }
+
+  .step h3 {
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+
+  .step p {
+    font-size: 14.5px;
+    color: var(--text-dim);
+  }
+
+  .trust-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .trust-grid.cols-4 { grid-template-columns: repeat(4, 1fr); max-width: 1100px; }
+
+  .trust-card {
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: var(--radius);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
+    padding: 28px;
+  }
+
+  .trust-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 18px;
+  }
+
+  .trust-card:nth-child(3n+1) .trust-icon { background: var(--turquoise); }
+  .trust-card:nth-child(3n+2) .trust-icon { background: var(--orange); }
+  .trust-card:nth-child(3n+3) .trust-icon { background: var(--turquoise-wash); }
+
+  .trust-icon svg { width: 20px; height: 20px; stroke: var(--text); }
+
+  .trust-card h3 {
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .trust-card p {
+    font-size: 14px;
+    color: var(--text-dim);
+  }
+
+  .score-scale {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dimmer);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 10px;
+  }
+
+  .note-strip {
+    max-width: 1000px;
+    margin: 32px auto 0;
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: var(--radius);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
+    padding: 20px 28px;
+    font-size: 14px;
+    color: var(--text-dim);
+    text-align: center;
+  }
+
+  .note-strip strong { color: var(--text); }
+
+  .final-cta {
+    text-align: center;
+    padding: 80px 24px 140px;
+  }
+
+  .final-cta-box {
+    max-width: 760px;
+    margin: 0 auto;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 64px 40px;
+    box-shadow: 0 20px 48px rgba(0,0,0,0.1);
+  }
+
+  .final-cta-box h2 {
+    font-family: var(--display);
+    font-size: clamp(26px, 4vw, 36px);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin-bottom: 16px;
+    text-wrap: balance;
+  }
+
+  .final-cta-box p {
+    color: var(--text-dim);
+    font-size: 16px;
+    margin-bottom: 36px;
+  }
+
+  footer {
+    padding: 40px 24px;
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
+  }
+
+  .footer-inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .footer-inner .logo { font-size: 15px; }
+
+  footer .copy {
+    font-size: 13px;
+    color: rgba(0, 0, 0, 0.8);
+    font-family: var(--mono);
+  }
+
+  footer .footer-links {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  footer .footer-links a {
+    font-size: 13px;
+    color: rgba(0, 0, 0, 0.8);
+    transition: color 0.2s ease;
+  }
+
+  footer .footer-links a:hover { color: var(--text); }
+
+  @media (max-width: 900px) {
+    .steps { grid-template-columns: repeat(2, 1fr); }
+    .trust-grid, .trust-grid.cols-4 { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 640px) {
+    .nav-links { display: none; }
+    .nav-contact-link { display: none; }
+    .steps { grid-template-columns: 1fr; }
+    .page-header { padding: 120px 20px 32px; }
+    section { padding: 72px 20px; }
+    .final-cta { padding: 60px 20px 90px; }
+    .final-cta-box { padding: 48px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <nav>
+    <div class="logo">
+      <div class="logo-mark">A</div>
+      APEX
+    </div>
+    <div class="nav-links">
+      <a href="/meet-apex">Meet APEX</a>
+      <a href="/platform" class="current">Platform</a>
+      <a href="/solutions">Solutions</a>
+      <a href="/resources">Resources</a>
+      <a href="https://apex-desairishi592-3286s-projects.vercel.app">Login</a>
+    </div>
+    <div class="nav-cta-group">
+      <a href="mailto:desairishi592@gmail.com" class="nav-contact-link">Contact Us</a>
+      <a href="https://apex-desairishi592-3286s-projects.vercel.app" class="btn btn-primary btn-small">Try APEX</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <section class="page-header">
+    <div class="container">
+      <div class="eyebrow">Platform</div>
+      <h1>How APEX actually scores a company</h1>
+      <p>Not one flat pass/fail bar for every industry — a scoring engine that's benchmarked against the sector a company is actually competing in.</p>
+    </div>
+  </section>
+
+  <section id="how-it-works">
+    <div class="container">
+      <div class="section-head">
+        <div class="eyebrow">How it works</div>
+        <h2>Four steps to a full diagnostic</h2>
+        <p>APEX turns public financial data into a clear, investor-grade health report — no analysts, no spreadsheets, no waiting.</p>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">01</div>
+          <h3>Search any company</h3>
+          <p>Type in a name or ticker. No accounts to connect, no documents to upload.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">02</div>
+          <h3>AI runs the scan</h3>
+          <p>APEX pulls real-time financials and insider activity, then analyzes cash flow, growth trends, and dozens of risk signals.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">03</div>
+          <h3>Get your health score</h3>
+          <p>Receive a clear, weighted score with plain-English explanations of what's driving it — in about 30 seconds.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">04</div>
+          <h3>Act on the insights</h3>
+          <p>Review red flags and prioritized takeaways — the same signals professional analysts look for.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="subscores">
+    <div class="container">
+      <div class="section-head">
+        <div class="eyebrow">Under the hood</div>
+        <h2>One score, six explainable parts</h2>
+        <p>The overall score breaks down into named sub-scores, each with a plain-English reason grounded in sector-benchmark data — not a black box.</p>
+      </div>
+      <div class="trust-grid">
+        <div class="trust-card">
+          <div class="trust-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V10M18 20V4M6 20v-4"/></svg></div>
+          <div class="score-scale">0–10 scale</div>
+          <h3>Profitability</h3>
+          <p>Margins and return on equity, benchmarked against sector medians — not one flat bar for every industry.</p>
+        </div>
+        <div class="trust-card">
+          <div class="trust-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+          <div class="score-scale">0–10 scale</div>
+          <h3>Financial Health</h3>
+          <p>Balance-sheet strength — debt/equity, current ratio, and liquidity — each read against sector norms.</p>
+        </div>
+        <div class="trust-card">
+          <div class="trust-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
+          <div class="score-scale">0–10 scale</div>
+          <h3>Valuation</h3>
+          <p>How the price compares to earnings, growth, and sector peers right now.</p>
+        </div>
+        <div class="trust-card">
+          <div class="trust-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg></div>
+          <div class="score-scale">0–10 scale</div>
+          <h3>Risk (Volatility)</h3>
+          <p>How much the stock actually moves, and what that says about downside risk.</p>
+        </div>
+        <div class="trust-card">
+          <div class="trust-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 17 6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg></div>
+          <div class="score-scale">0–10 scale</div>
+          <h3>Momentum</h3>
+          <p>Recent price and fundamental trend — improving or deteriorating.</p>
+        </div>
+        <div class="trust-card">
+          <div class="trust-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></div>
+          <div class="score-scale">0–10 scale</div>
+          <h3>Red Flags</h3>
+          <p>How many — and how severe — of the specific risk checks below are currently triggered.</p>
+        </div>
+      </div>
+      <div class="note-strip">Scores are benchmarked against the sector Finnhub's classification actually maps a company to — <strong>not</strong> a single universal threshold applied to every company regardless of industry.</div>
+    </div>
+  </section>
+
+  <section id="beyond">
+    <div class="container">
+      <div class="section-head">
+        <div class="eyebrow">Beyond the score</div>
+        <h2>What's in the full report</h2>
+        <p>The health score is the headline — the full report goes further.</p>
+      </div>
+      <div class="trust-grid cols-4">
+        <div class="trust-card">
+          <div class="trust-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></div>
+          <h3>Red-flag detection</h3>
+          <p>Each flag comes with a severity and the exact underlying value — never a vague warning.</p>
+        </div>
+        <div class="trust-card">
+          <div class="trust-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+          <h3>Risk timeline</h3>
+          <p>Identified risks are mapped to a rough timeframe, so you know what's urgent versus what's worth watching.</p>
+        </div>
+        <div class="trust-card">
+          <div class="trust-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+          <h3>Insider sentiment</h3>
+          <p>Recent buy/sell activity from company insiders, summarized with the transaction count behind it.</p>
+        </div>
+        <div class="trust-card">
+          <div class="trust-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10M12 20V4M6 20v-6"/></svg></div>
+          <h3>Peer comparison</h3>
+          <p>Every scan pulls real competitor tickers, so you see where a company stands against who it's actually competing with.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="final-cta">
+    <div class="container">
+      <div class="final-cta-box">
+        <h2>See the full report on a real company</h2>
+        <p>Run a scan in 30 seconds — score, sub-scores, red flags, and peer comparison, all in one report.</p>
+        <a href="https://apex-desairishi592-3286s-projects.vercel.app" class="btn btn-primary btn-lg">Try APEX</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div class="logo">
+      <div class="logo-mark">A</div>
+      APEX
+    </div>
+    <div class="footer-links">
+      <a href="/meet-apex">Meet APEX</a>
+      <a href="/platform">Platform</a>
+      <a href="/solutions">Solutions</a>
+      <a href="/resources">Resources</a>
+      <a href="/privacy">Privacy Policy</a>
+    </div>
+    <div class="copy">© 2026 APEX. All rights reserved.</div>
+  </div>
+</footer>
+
+</body>
+</html>

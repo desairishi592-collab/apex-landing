@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Resources — APEX</title>
+<meta name="description" content="Frequently asked questions about APEX, our privacy policy, and how to reach us." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg-alt: #f7f7f5;
+    --surface: #ffffff;
+    --surface-2: #ffffff;
+    --border: #e4e4e4;
+    --turquoise: #00ffef;
+    --turquoise-wash: rgba(0, 255, 239, 0.14);
+    --turquoise-ink: #0a8f83;
+    --orange: #ff6b4a;
+    --orange-wash: rgba(255, 107, 74, 0.12);
+    --orange-ink: #b34423;
+    --red: #e8362e;
+    --text: #0b0b0c;
+    --text-dim: #55575a;
+    --text-dimmer: #86888b;
+    --radius: 6px;
+    --radius-sm: 3px;
+    --mono: 'IBM Plex Mono', ui-monospace, monospace;
+    --sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --display: 'Fraunces', Georgia, serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: linear-gradient(180deg, #00ffef 0%, #38bdf8 35%, #38bdf8 52%, #f7fbff 60%, #ffb347 68%, #ffa500 80%, #ff6b4a 100%);
+    color: var(--text);
+    font-family: var(--sans);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  a { color: inherit; text-decoration: none; }
+
+  :focus-visible {
+    outline: 2px solid var(--text);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  }
+
+  .container {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255, 255, 255, 0.86);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  nav {
+    display: flex;
+    align-items: center;
+    padding: 14px 24px;
+    max-width: 1180px;
+    margin: 0 auto;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--mono);
+    font-weight: 500;
+    font-size: 16px;
+    letter-spacing: 0.02em;
+    color: var(--text);
+  }
+
+  .logo-mark {
+    width: 26px;
+    height: 26px;
+    border-radius: var(--radius-sm);
+    background: var(--orange);
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 13px;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 28px;
+    align-items: center;
+    margin-left: 44px;
+  }
+
+  .nav-links a {
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--text-dim);
+    transition: color 0.2s ease;
+  }
+
+  .nav-links a:hover, .nav-links a.current { color: var(--text); }
+
+  .nav-cta-group {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 22px;
+  }
+
+  .nav-contact-link {
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--text-dim);
+    transition: color 0.2s ease;
+  }
+
+  .nav-contact-link:hover { color: var(--text); }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    font-family: var(--sans);
+    border-radius: 999px;
+    padding: 12px 22px;
+    cursor: pointer;
+    border: 1.5px solid transparent;
+    transition: transform 0.15s ease, background 0.2s ease, color 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .btn-primary {
+    background: var(--text);
+    color: #fff;
+  }
+
+  .btn-primary:hover { transform: translateY(-1px); background: #2a2a2c; }
+
+  .btn-small { padding: 8px 16px; font-size: 13px; }
+  .btn-lg { padding: 16px 32px; font-size: 15.5px; }
+
+  .page-header {
+    padding: 150px 24px 40px;
+    text-align: center;
+  }
+
+  .page-header .eyebrow { margin-bottom: 14px; }
+
+  .page-header h1 {
+    font-family: var(--display);
+    font-size: clamp(36px, 6vw, 60px);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    max-width: 780px;
+    margin: 0 auto 20px;
+    text-wrap: balance;
+  }
+
+  .page-header p {
+    font-size: 18px;
+    color: rgba(0, 0, 0, 0.8);
+    max-width: 620px;
+    margin: 0 auto;
+  }
+
+  section {
+    position: relative;
+    z-index: 1;
+    padding: 100px 24px;
+  }
+
+  .section-head {
+    text-align: center;
+    max-width: 640px;
+    margin: 0 auto 56px;
+  }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 14px;
+  }
+
+  .section-head h2 {
+    font-family: var(--display);
+    font-size: clamp(26px, 4vw, 38px);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin-bottom: 16px;
+    text-wrap: balance;
+  }
+
+  .section-head p {
+    color: rgba(0, 0, 0, 0.8);
+    font-size: 17px;
+  }
+
+  /* FAQ — answers use dimmer gray text, so the whole list sits on a white panel
+     rather than directly on the gradient (gray-on-gradient contrast fails, ~1–1.5:1) */
+  .faq-list {
+    max-width: 760px;
+    margin: 0 auto;
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: var(--radius);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
+    padding: 4px 32px;
+  }
+
+  .faq-item {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .faq-item:last-child {
+    border-bottom: none;
+  }
+
+  .faq-question {
+    width: 100%;
+    background: none;
+    border: none;
+    color: var(--text);
+    font-size: 16.5px;
+    font-weight: 600;
+    font-family: inherit;
+    padding: 24px 4px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    text-align: left;
+    gap: 20px;
+  }
+
+  .faq-question .icon {
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 1.5px solid var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    color: var(--text);
+    transition: transform 0.25s ease;
+  }
+
+  .faq-item.open .faq-question .icon { transform: rotate(45deg); background: var(--orange); border-color: var(--orange); }
+
+  .faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+  }
+
+  .faq-answer p {
+    color: var(--text-dim);
+    font-size: 14.5px;
+    padding-bottom: 24px;
+    padding-right: 40px;
+  }
+
+  .faq-item.open .faq-answer { max-height: 260px; }
+
+  /* More resources — simple two-link strip */
+  .more-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  .more-card {
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: var(--radius);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
+    padding: 28px;
+  }
+
+  .more-card h3 {
+    font-size: 16.5px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .more-card p {
+    font-size: 14px;
+    color: var(--text-dim);
+    margin-bottom: 16px;
+  }
+
+  .more-card a.card-link {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--text);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .final-cta {
+    text-align: center;
+    padding: 80px 24px 140px;
+  }
+
+  .final-cta-box {
+    max-width: 760px;
+    margin: 0 auto;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 64px 40px;
+    box-shadow: 0 20px 48px rgba(0,0,0,0.1);
+  }
+
+  .final-cta-box h2 {
+    font-family: var(--display);
+    font-size: clamp(26px, 4vw, 36px);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin-bottom: 16px;
+    text-wrap: balance;
+  }
+
+  .final-cta-box p {
+    color: var(--text-dim);
+    font-size: 16px;
+    margin-bottom: 36px;
+  }
+
+  footer {
+    padding: 40px 24px;
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
+  }
+
+  .footer-inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .footer-inner .logo { font-size: 15px; }
+
+  footer .copy {
+    font-size: 13px;
+    color: rgba(0, 0, 0, 0.8);
+    font-family: var(--mono);
+  }
+
+  footer .footer-links {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  footer .footer-links a {
+    font-size: 13px;
+    color: rgba(0, 0, 0, 0.8);
+    transition: color 0.2s ease;
+  }
+
+  footer .footer-links a:hover { color: var(--text); }
+
+  @media (max-width: 900px) {
+    .more-grid { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 640px) {
+    .nav-links { display: none; }
+    .nav-contact-link { display: none; }
+    .page-header { padding: 120px 20px 32px; }
+    section { padding: 72px 20px; }
+    .faq-list { padding: 4px 20px; }
+    .final-cta { padding: 60px 20px 90px; }
+    .final-cta-box { padding: 48px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <nav>
+    <div class="logo">
+      <div class="logo-mark">A</div>
+      APEX
+    </div>
+    <div class="nav-links">
+      <a href="/meet-apex">Meet APEX</a>
+      <a href="/platform">Platform</a>
+      <a href="/solutions">Solutions</a>
+      <a href="/resources" class="current">Resources</a>
+      <a href="https://apex-desairishi592-3286s-projects.vercel.app">Login</a>
+    </div>
+    <div class="nav-cta-group">
+      <a href="mailto:desairishi592@gmail.com" class="nav-contact-link">Contact Us</a>
+      <a href="https://apex-desairishi592-3286s-projects.vercel.app" class="btn btn-primary btn-small">Try APEX</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <section class="page-header">
+    <div class="container">
+      <div class="eyebrow">Resources</div>
+      <h1>Answers, policies, and how to reach us</h1>
+      <p>Everything you need to know before running your first scan.</p>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="container">
+      <div class="section-head">
+        <div class="eyebrow">FAQ</div>
+        <h2>Frequently asked questions</h2>
+      </div>
+      <div class="faq-list" id="faqList">
+        <div class="faq-item open">
+          <button class="faq-question">
+            What exactly does APEX analyze?
+            <span class="icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>APEX automatically pulls a company's financial statements, cash flow, insider activity, and growth trends — no uploads required — and analyzes them to generate a comprehensive health score, plus a prioritized list of risks and recommendations.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">
+            Is my business data secure?
+            <span class="icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>Yes. All data is encrypted in transit and at rest using bank-level standards. We never sell your data or use it to train models outside of your own account's analysis.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">
+            How long does a scan take?
+            <span class="icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>Most scans complete in about 30 seconds. Just search a company and APEX returns a full report with a health score, risk flags, and recommended next steps.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">
+            Who is APEX for?
+            <span class="icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>Founders who want to catch issues before they hurt fundraising or an exit, and investors who want a fast, standardized read on a company's health during diligence. See <a href="/solutions" style="text-decoration:underline;">Solutions</a> for more on each.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">
+            Do I need to be a finance expert to use it?
+            <span class="icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>No. APEX translates complex financial and operational signals into plain-English explanations and clear, actionable recommendations — no accounting background required.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="more">
+    <div class="container">
+      <div class="section-head">
+        <div class="eyebrow">More</div>
+        <h2>Policies and support</h2>
+      </div>
+      <div class="more-grid">
+        <div class="more-card">
+          <h3>Privacy Policy</h3>
+          <p>What we collect, how we use it, and your rights over your own data.</p>
+          <a class="card-link" href="/privacy">Read the policy →</a>
+        </div>
+        <div class="more-card">
+          <h3>Contact Us</h3>
+          <p>Questions, feedback, or a data request — reach us directly.</p>
+          <a class="card-link" href="mailto:desairishi592@gmail.com">desairishi592@gmail.com →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="final-cta">
+    <div class="container">
+      <div class="final-cta-box">
+        <h2>Find out what the pros already know</h2>
+        <p>Run your first scan in 30 seconds and get an investor-grade health report on any company.</p>
+        <a href="https://apex-desairishi592-3286s-projects.vercel.app" class="btn btn-primary btn-lg">Try APEX</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div class="logo">
+      <div class="logo-mark">A</div>
+      APEX
+    </div>
+    <div class="footer-links">
+      <a href="/meet-apex">Meet APEX</a>
+      <a href="/platform">Platform</a>
+      <a href="/solutions">Solutions</a>
+      <a href="/resources">Resources</a>
+      <a href="/privacy">Privacy Policy</a>
+    </div>
+    <div class="copy">© 2026 APEX. All rights reserved.</div>
+  </div>
+</footer>
+
+<script>
+  document.querySelectorAll('.faq-question').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var item = btn.closest('.faq-item');
+      var wasOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(function (i) { i.classList.remove('open'); });
+      if (!wasOpen) item.classList.add('open');
+    });
+  });
+</script>
+
+</body>
+</html>
