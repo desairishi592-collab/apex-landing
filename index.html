@@ -587,19 +587,21 @@
       <div class="badge"><span class="dot"></span> AI-powered company health scanner</div>
       <h1>Know what <span class="accent">the pros know.</span></h1>
       <p>APEX scans any company's financials and gives you an AI-powered health report in 30 seconds. No setup, no spreadsheets, no analyst required.</p>
-      <!-- "Install APEX" — genuinely wired to beforeinstallprompt (see script at the bottom of
-           this file), but that event is scoped to the origin that owns the manifest + service
-           worker, and this landing page (apex-landing-lac.vercel.app) has neither — the PWA is
-           entirely on the app's origin (apex-desairishi592-*.vercel.app, see its index.html for
-           the manifest link, sw.js registration, and its own beforeinstallprompt handler). There
-           is no cross-origin way to capture or fire that event from here, so under the current
-           two-domain setup this listener will never fire and the button always falls through to
-           its href, opening the app in a new tab where the app's own install banner takes over.
-           The listener is still wired up for real so the button becomes a genuine one-click
-           install trigger automatically if that ever changes (e.g. this domain gains its own
-           manifest+SW, or the two origins get unified) — no further JS changes would be needed. -->
+      <!-- Both CTAs share one beforeinstallprompt-aware handler (see script at the bottom of
+           this file): if a real install prompt is ever captured, either button triggers the
+           native install dialog instead of navigating. That event is scoped to the origin that
+           owns the manifest + service worker, and this landing page (apex-landing-lac.vercel.app)
+           has neither — the PWA is entirely on the app's origin (apex-desairishi592-*.vercel.app,
+           see its index.html for the manifest link, sw.js registration, and its own
+           beforeinstallprompt handler). There is no cross-origin way to capture or fire that event
+           from here, so under the current two-domain setup this listener will never fire and both
+           buttons always fall through to their href — "Try APEX Free" opens the app normally,
+           "Install APEX" opens it in a new tab where the app's own install banner takes over. The
+           listener is still wired up for real so both buttons become genuine one-click installers
+           automatically if that ever changes (e.g. this domain gains its own manifest+SW, or the
+           two origins get unified) — no further JS changes would be needed. -->
       <div class="hero-cta">
-        <a href="https://apex-desairishi592-3286s-projects.vercel.app" class="btn btn-primary btn-lg">Try APEX Free</a>
+        <a href="https://apex-desairishi592-3286s-projects.vercel.app" class="btn btn-primary btn-lg" id="try-cta">Try APEX Free</a>
         <a href="https://apex-desairishi592-3286s-projects.vercel.app" class="btn btn-ghost btn-lg" id="install-cta" target="_blank" rel="noopener" title="Opens the APEX app — install it from there">
           <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
           Install APEX
@@ -712,42 +714,47 @@
 </footer>
 
 <script>
-  // Real beforeinstallprompt capture for the "Install APEX" button. Under the current setup
-  // this landing page has no manifest.json/service worker of its own, so the browser has no
-  // basis to ever fire this event here — the PWA lives entirely on the app's origin (see the
-  // HTML comment above the button). This isn't dead code, though: it's what makes the button a
-  // genuine one-click installer with zero further changes if that ever stops being true.
+  // Real beforeinstallprompt capture, shared by "Try APEX Free" and "Install APEX". Under the
+  // current setup this landing page has no manifest.json/service worker of its own, so the
+  // browser has no basis to ever fire this event here — the PWA lives entirely on the app's
+  // origin (see the HTML comment above the buttons). This isn't dead code, though: it's what
+  // makes both buttons genuine one-click installers with zero further changes if that ever
+  // stops being true.
   (function () {
-    var installBtn = document.getElementById('install-cta');
-    if (!installBtn) return;
+    var buttons = ['try-cta', 'install-cta']
+      .map(function (id) { return document.getElementById(id); })
+      .filter(Boolean);
+    if (!buttons.length) return;
 
     var deferredInstallPrompt = null;
 
     window.addEventListener('beforeinstallprompt', function (e) {
       e.preventDefault();
       deferredInstallPrompt = e;
-      // A real prompt is available on this origin now — stop treating the button as a plain
+      // A real prompt is available on this origin now — stop treating either button as a plain
       // link to the app and let the click handler below trigger the native dialog instead.
-      installBtn.removeAttribute('target');
-      installBtn.title = 'Install APEX';
+      buttons.forEach(function (btn) { btn.removeAttribute('target'); });
+      var installBtn = document.getElementById('install-cta');
+      if (installBtn) installBtn.title = 'Install APEX';
     });
 
     window.addEventListener('appinstalled', function () {
       deferredInstallPrompt = null;
     });
 
-    installBtn.addEventListener('click', function (e) {
-      // No captured prompt (true on this domain today, and true in any browser — Safari,
-      // an already-installed app, or criteria simply not met — that never fires the event):
-      // fall through to the href/target already on the element, which opens the app in a
-      // new tab where its own install banner takes over.
-      if (!deferredInstallPrompt) return;
+    buttons.forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        // No captured prompt (true on this domain today, and true in any browser — Safari,
+        // an already-installed app, or criteria simply not met — that never fires the event):
+        // fall through to the button's own href/target, e.g. opening the app normally.
+        if (!deferredInstallPrompt) return;
 
-      e.preventDefault();
-      var promptEvent = deferredInstallPrompt;
-      deferredInstallPrompt = null;
-      promptEvent.prompt();
-      promptEvent.userChoice.catch(function () {});
+        e.preventDefault();
+        var promptEvent = deferredInstallPrompt;
+        deferredInstallPrompt = null;
+        promptEvent.prompt();
+        promptEvent.userChoice.catch(function () {});
+      });
     });
   })();
 </script>
