@@ -587,16 +587,20 @@
       <div class="badge"><span class="dot"></span> AI-powered company health scanner</div>
       <h1>Know what <span class="accent">the pros know.</span></h1>
       <p>APEX scans any company's financials and gives you an AI-powered health report in 30 seconds. No setup, no spreadsheets, no analyst required.</p>
-      <!-- "Install APEX" links to the live app rather than calling the browser's install API
-           directly: beforeinstallprompt is scoped to the origin that owns the manifest + service
-           worker, which is the app's origin (apex-desairishi592-*.vercel.app), not this landing
-           page's origin. There is no cross-origin way to capture or fire that event from here —
-           this isn't a fallback for unsupported browsers, it's the only mechanism available. The
-           app already has its own beforeinstallprompt handler and install banner (index.html in
-           the main app repo), which takes over once the user lands there. -->
+      <!-- "Install APEX" — genuinely wired to beforeinstallprompt (see script at the bottom of
+           this file), but that event is scoped to the origin that owns the manifest + service
+           worker, and this landing page (apex-landing-lac.vercel.app) has neither — the PWA is
+           entirely on the app's origin (apex-desairishi592-*.vercel.app, see its index.html for
+           the manifest link, sw.js registration, and its own beforeinstallprompt handler). There
+           is no cross-origin way to capture or fire that event from here, so under the current
+           two-domain setup this listener will never fire and the button always falls through to
+           its href, opening the app in a new tab where the app's own install banner takes over.
+           The listener is still wired up for real so the button becomes a genuine one-click
+           install trigger automatically if that ever changes (e.g. this domain gains its own
+           manifest+SW, or the two origins get unified) — no further JS changes would be needed. -->
       <div class="hero-cta">
         <a href="https://apex-desairishi592-3286s-projects.vercel.app" class="btn btn-primary btn-lg">Try APEX Free</a>
-        <a href="https://apex-desairishi592-3286s-projects.vercel.app" class="btn btn-ghost btn-lg" id="install-cta">
+        <a href="https://apex-desairishi592-3286s-projects.vercel.app" class="btn btn-ghost btn-lg" id="install-cta" target="_blank" rel="noopener" title="Opens the APEX app — install it from there">
           <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
           Install APEX
         </a>
@@ -706,6 +710,47 @@
     <div class="copy">© 2026 APEX. All rights reserved.</div>
   </div>
 </footer>
+
+<script>
+  // Real beforeinstallprompt capture for the "Install APEX" button. Under the current setup
+  // this landing page has no manifest.json/service worker of its own, so the browser has no
+  // basis to ever fire this event here — the PWA lives entirely on the app's origin (see the
+  // HTML comment above the button). This isn't dead code, though: it's what makes the button a
+  // genuine one-click installer with zero further changes if that ever stops being true.
+  (function () {
+    var installBtn = document.getElementById('install-cta');
+    if (!installBtn) return;
+
+    var deferredInstallPrompt = null;
+
+    window.addEventListener('beforeinstallprompt', function (e) {
+      e.preventDefault();
+      deferredInstallPrompt = e;
+      // A real prompt is available on this origin now — stop treating the button as a plain
+      // link to the app and let the click handler below trigger the native dialog instead.
+      installBtn.removeAttribute('target');
+      installBtn.title = 'Install APEX';
+    });
+
+    window.addEventListener('appinstalled', function () {
+      deferredInstallPrompt = null;
+    });
+
+    installBtn.addEventListener('click', function (e) {
+      // No captured prompt (true on this domain today, and true in any browser — Safari,
+      // an already-installed app, or criteria simply not met — that never fires the event):
+      // fall through to the href/target already on the element, which opens the app in a
+      // new tab where its own install banner takes over.
+      if (!deferredInstallPrompt) return;
+
+      e.preventDefault();
+      var promptEvent = deferredInstallPrompt;
+      deferredInstallPrompt = null;
+      promptEvent.prompt();
+      promptEvent.userChoice.catch(function () {});
+    });
+  })();
+</script>
 
 </body>
 </html>
